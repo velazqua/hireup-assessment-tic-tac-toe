@@ -30,38 +30,37 @@ def reset_game():
         if response == 'yes':
             global GAME_BOARD
             GAME_BOARD = [str(x) for x in range(10)]
-            print_board()
-            return
+            return False
         elif response == 'no':
-            print("Goodbye!")
-            exit()
+            return True
         else:
             print("Invalid response! Please enter 'yes' or 'no'.")
 
 def play_game():
-    for player in PLAYERS:
-        while True:
-            move = collect_valid_move(player)
-            GAME_BOARD[move] = player
-            print_board()
-            break
-        # Check for a win condition
-        winning_combinations = [(1, 2, 3), (4, 5, 6), (7, 8, 9),
-                                (1, 4, 7), (2, 5, 8), (3, 6, 9),
-                                (1, 5, 9), (3, 5, 7)]
-        for combo in winning_combinations: 
-            if GAME_BOARD[combo[0]] == GAME_BOARD[combo[1]] == GAME_BOARD[combo[2]] == player:
-                print(f"Player {player} wins!")
-                reset_game()
+    while True:
+        for player in PLAYERS:
+            while True:
+                move = collect_valid_move(player)
+                GAME_BOARD[move] = player
+                print_board()
                 break
-        # Check for a draw condition
-        if all(cell in 'XO' for cell in GAME_BOARD[1:]):
-            print("It's a draw!")
-            reset_game()
-            break
+            # Check for a win condition
+            winning_combinations = [(1, 2, 3), (4, 5, 6), (7, 8, 9),
+                                    (1, 4, 7), (2, 5, 8), (3, 6, 9),
+                                    (1, 5, 9), (3, 5, 7)]
+            for combo in winning_combinations: 
+                if GAME_BOARD[combo[0]] == GAME_BOARD[combo[1]] == GAME_BOARD[combo[2]] == player:
+                    print(f"Player {player} wins!")
+                    return 
+            # Check for a draw condition
+            if all(cell in 'XO' for cell in GAME_BOARD[1:]):
+                print("It's a draw!")
+                return 
 
 while True:
     print_board()
-    end_game = play_game()
+    play_game()
+    end_game = reset_game()
     if end_game:
+        print("Goodbye!")
         break
